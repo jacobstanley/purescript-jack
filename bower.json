@@ -1,0 +1,28 @@
+{
+  "name": "purescript-jack",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "output"
+  ],
+  "dependencies": {
+    "purescript-arrays": "^1.0.0",
+    "purescript-console": "^1.0.0",
+    "purescript-debug": "^1.0.0",
+    "purescript-either": "^1.0.0",
+    "purescript-exceptions": "^1.0.0",
+    "purescript-free": "^1.0.0",
+    "purescript-int-53": "^2.1.0",
+    "purescript-lists": "^1.0.0",
+    "purescript-nonempty": "^1.0.0",
+    "purescript-partial": "^1.0.0",
+    "purescript-random": "^1.0.0",
+    "purescript-strings": "^1.0.0",
+    "purescript-transformers": "^1.0.0"
+  },
+  "devDependencies": {
+    "purescript-psci-support": "^1.0.0",
+    "purescript-node-process": "^2.0.0"
+  }
+}

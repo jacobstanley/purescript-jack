@@ -43,8 +43,13 @@ problem, a `Gen String` can be turned in to a `Gen Foo` using only
 
 ## Getting Started
 
-The easiest way to get started with Jack is to create a `test/Main.purs`
-as shown below:
+The easiest way to get started with Jack is to install it as a dev dependency:
+
+```
+$ bower install --save-dev purescript-jack
+```
+
+Then create a `test/Main.purs` as shown below:
 
 ```purescript
 module Test.Main (
@@ -62,10 +67,9 @@ import Prelude
 main :: forall e. Eff ("random" :: RANDOM, "console" :: CONSOLE | e) Unit
 main =
   jackMain [
-    -- List the modules which contain property tests here
-      "Test.MyTests"
-    , "Test.MyOtherTests"
-    , "Test.DiceGames"
+    -- List all the modules which contain property tests here, for this
+    -- example we have just one module: Test.DiceGames
+      "Test.DiceGames"
     ]
 ```
 

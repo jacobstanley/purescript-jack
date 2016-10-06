@@ -1,10 +1,22 @@
 {
   "name": "purescript-jack",
+  "description": "QuickCheck with shrinking for free",
+  "homepage": "https://github.com/jystic/purescript-jack",
+  "license": "Apache-2.0",
+  "authors": [
+    "Jacob Stanley <jacob@stanley.io>"
+  ],
+  "repository": {
+      "type": "git",
+      "url": "git://github.com/jystic/purescript-jack.git"
+  },
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
-    "output"
+    "output",
+    "test",
+    "bower.json"
   ],
   "dependencies": {
     "purescript-arrays": "^1.0.0",
@@ -31,6 +43,5 @@
   },
   "devDependencies": {
     "purescript-psci-support": "^1.0.0"
-  },
-  "version": "0.0.0"
+  }
 }

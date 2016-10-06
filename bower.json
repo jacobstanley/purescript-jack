@@ -9,20 +9,27 @@
   "dependencies": {
     "purescript-arrays": "^1.0.0",
     "purescript-console": "^1.0.0",
-    "purescript-debug": "^1.0.0",
+    "purescript-control": "^1.0.0",
+    "purescript-eff": "^1.0.0",
     "purescript-either": "^1.0.0",
-    "purescript-exceptions": "^1.0.0",
-    "purescript-free": "^1.0.0",
+    "purescript-foldable-traversable": "^1.0.0",
+    "purescript-generics": "^1.0.1",
     "purescript-int-53": "^2.1.0",
-    "purescript-lists": "^1.0.0",
-    "purescript-nonempty": "^1.0.0",
-    "purescript-partial": "^1.0.0",
+    "purescript-integers": "^1.1.0",
+    "purescript-lazy": "^1.0.0",
+    "purescript-lists": "^1.0.1",
+    "purescript-maps": "^1.1.0",
+    "purescript-maybe": "^1.0.0",
+    "purescript-monoid": "^1.0.0",
+    "purescript-nonempty": "^1.1.1",
+    "purescript-partial": "^1.1.0",
+    "purescript-prelude": "^1.1.0",
     "purescript-random": "^1.0.0",
     "purescript-strings": "^1.0.0",
-    "purescript-transformers": "^1.0.0"
+    "purescript-tailrec": "^1.0.0",
+    "purescript-tuples": "^1.0.0"
   },
   "devDependencies": {
-    "purescript-psci-support": "^1.0.0",
-    "purescript-node-process": "^2.0.0"
+    "purescript-psci-support": "^1.0.0"
   }
 }

@@ -1,11 +1,27 @@
-module Jack.Property where
+module Jack.Property (
+    Result(..)
+  , renderResult
+
+  , Property
+  , mkProperty
+  , unProperty
+  , property
+
+  , check
+  , check'
+  , forAll
+  , counterexample
+
+  , sampleTree
+  , printSample
+  , printSampleTree
+  ) where
 
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Console (CONSOLE, log)
 import Control.Monad.Eff.Random (RANDOM)
-import Control.Monad.Rec.Class (tailRecM, tailRec)
+import Control.Monad.Rec.Class (tailRec)
 
-import Data.Array as Array
 import Data.Either (Either(..))
 import Data.Foldable (for_, foldMap, intercalate)
 import Data.List (List(..))
@@ -23,29 +39,6 @@ import Jack.Tree (Tree(..), outcome, shrinks)
 
 import Prelude
 
--- | Generate some example trees.
-sampleTree :: forall e a. Size -> Int -> Gen a -> Eff ("random" :: RANDOM | e) (List (Tree a))
-sampleTree size count (Gen r) = do
-  seed <- randomSeed
-  pure <<< runRandom seed size $
-    replicateRecM count r
-
--- | Generate some example outcomes (and shrinks) and prints them to 'stdout'.
-printSample :: forall e a. Show a => Gen a -> Eff ("random" :: RANDOM, "console" :: CONSOLE | e) Unit
-printSample gen = do
-  forest <- map (List.take 5) $ sampleTree 10 10 gen
-  for_ forest $ \tree -> do
-    log "=== Outcome ==="
-    log <<< show $ outcome tree
-    log "=== Shrinks ==="
-    traverse_ (log <<< show <<< outcome) $ shrinks tree
-    log ""
-
-printSampleTree :: forall e a. Show a => Gen a -> Eff ("random" :: RANDOM, "console" :: CONSOLE | e) Unit
-printSampleTree gen = do
-  forest <- map (List.take 1) $ sampleTree 10 1 gen
-  for_ forest $ \tree -> do
-    log $ show tree
 
 data Result =
     Success
@@ -65,8 +58,7 @@ renderResult xx =
     Success ->
       "Success"
     Failure xs ->
-      "Failure:\n" <>
-      intercalate "\n" (map ("  " <> _) xs)
+      intercalate "\n" xs
 
 mapFailure :: (List String -> List String) -> Result -> Result
 mapFailure f xx =
@@ -76,32 +68,50 @@ mapFailure f xx =
     Failure xs ->
       Failure $ f xs
 
-property :: Boolean -> Gen Result
+newtype Property =
+  Property { "Property :: Gen Result" :: Gen Result }
+
+mkProperty :: Gen Result -> Property
+mkProperty gen =
+  Property { "Property :: Gen Result": gen }
+
+unProperty :: Property -> Gen Result
+unProperty (Property x) =
+  x."Property :: Gen Result"
+
+mapGen :: (Gen Result -> Gen Result) -> Property -> Property
+mapGen f =
+  mkProperty <<< f <<< unProperty
+
+property :: Boolean -> Property
 property b =
   if b then
-    pure Success
+    mkProperty $ pure Success
   else
-    pure $ Failure List.Nil
+    mkProperty <<< pure $ Failure List.Nil
 
-counterexample :: String -> Gen Result -> Gen Result
+counterexample :: String -> Property -> Property
 counterexample msg =
-  map (mapFailure $ Cons msg)
+  mapGen <<< map <<< mapFailure $ Cons msg
 
-forAll :: forall a. Show a => Gen a -> (a -> Gen Result) -> Gen Result
-forAll jack f =
+forAll :: forall a. Show a => Gen a -> (a -> Property) -> Property
+forAll gen f =
   let
     prepend x =
-      counterexample (show x) (f x)
+      unProperty $ counterexample (show x) (f x)
   in
-    bind jack prepend
+    mkProperty $ bind gen prepend
 
-check :: forall e. Gen Result -> Eff ("random" :: RANDOM, "console" :: CONSOLE | e) Boolean
+check :: forall e. Property -> Eff ("random" :: RANDOM, "console" :: CONSOLE | e) Boolean
 check =
   check' 100
 
-check' :: forall e. Int -> Gen Result -> Eff ("random" :: RANDOM, "console" :: CONSOLE | e) Boolean
-check' n (Gen r) = do
+check' :: forall e. Int -> Property -> Eff ("random" :: RANDOM, "console" :: CONSOLE | e) Boolean
+check' n p = do
   let
+    random =
+        runGen $ unProperty p
+
     nextSize size =
       if size >= 100 then
         1
@@ -119,12 +129,12 @@ check' n (Gen r) = do
           Tuple seed1 seed2 ->
             let
               result =
-                runRandom seed1 size r
+                runRandom seed1 size random
             in
               case outcome result of
                 Failure _ ->
                   Right {
-                      tests
+                      tests: tests + 1
                     , result
                     }
 
@@ -141,25 +151,45 @@ check' n (Gen r) = do
     x =
       tailRec loop { seed, size: 1, tests: 0 }
 
-  case takeSmallest x.result of
+  case takeSmallest x.result 0 of
     Nothing -> do
-      log $ show x.tests <> " test(s) passed."
+      log $ "+++ OK, passed " <> renderTests x.tests <> "."
       pure true
-    Just msgs -> do
+    Just { nshrinks, msgs } -> do
+      log $ "*** Failed! Falsifiable (after " <>
+        renderTests x.tests <> renderShrinks nshrinks <> "):"
       log $ renderResult $ Failure msgs
       pure false
 
-takeSmallest :: Tree Result -> Maybe (List String)
-takeSmallest (Node x xs) =
+renderTests :: Int -> String
+renderTests n =
+  case n of
+    1 ->
+      "1 test"
+    _ ->
+      show n <> " tests"
+
+renderShrinks :: Int -> String
+renderShrinks n =
+  case n of
+    0 ->
+      ""
+    1 ->
+      " and 1 shrink"
+    _ ->
+      " and " <> show n <> " shrinks"
+
+takeSmallest :: Tree Result -> Int -> Maybe { nshrinks :: Int, msgs :: List String }
+takeSmallest (Node x xs) nshrinks =
   case x of
     Success ->
       Nothing
     Failure msgs ->
       case firstFailure xs of
         Nothing ->
-          Just msgs
+          Just { nshrinks, msgs }
         Just tree ->
-          takeSmallest tree
+          takeSmallest tree (nshrinks + 1)
 
 takeFailure :: Tree Result -> Maybe (Tree Result)
 takeFailure t@(Node x _) =
@@ -172,3 +202,27 @@ takeFailure t@(Node x _) =
 firstFailure :: Lazy.List (Tree Result) -> Maybe (Tree Result)
 firstFailure =
   runFirst <<< foldMap (First <<< takeFailure)
+
+-- | Generate some example trees.
+sampleTree :: forall e a. Size -> Int -> Gen a -> Eff ("random" :: RANDOM | e) (List (Tree a))
+sampleTree size count (Gen r) = do
+  seed <- randomSeed
+  pure <<< runRandom seed size $
+    replicateRecM count r
+
+-- | Generate some example outcomes (and shrinks) and prints them to 'stdout'.
+printSample :: forall e a. Show a => Gen a -> Eff ("random" :: RANDOM, "console" :: CONSOLE | e) Unit
+printSample gen = do
+  forest <- map (List.take 5) $ sampleTree 10 5 gen
+  for_ forest $ \tree -> do
+    log "=== Outcome ==="
+    log <<< show $ outcome tree
+    log "=== Shrinks ==="
+    traverse_ (log <<< show <<< outcome) $ shrinks tree
+    log ""
+
+printSampleTree :: forall e a. Show a => Gen a -> Eff ("random" :: RANDOM, "console" :: CONSOLE | e) Unit
+printSampleTree gen = do
+  forest <- map (List.take 1) $ sampleTree 10 1 gen
+  for_ forest $ \tree -> do
+    log $ show tree

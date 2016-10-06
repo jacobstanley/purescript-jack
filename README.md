@@ -164,6 +164,27 @@ number happens automatically. With traditional QuickCheck shrinking we
 would have had to parse the string, shrink the number, check that's it's
 still even (or odd), and then convert it back to a string again.
 
+## Limitations
+
+Many of the features you'd expect from a QuickCheck library are still
+missing, but we'll get there eventually:
+
+- Monadic / effectful tests
+- Generating functions
+- Model testing
+
+Jack doesn't have an `Arbitrary` type class, by design. `Arbitrary`
+instances often end up being orphans and I consider this problematic,
+especially in PureScript. The main purpose of the `Arbitrary` class as
+I see it is to link the generator with a shrink function, this isn't
+required with Jack so `Arbitrary` has been eliminated.
+
+This library is still very new, and I wouldn't be surprised if some of
+the combinators are still a bit buggy. Jack relies heavily on laziness
+and it wasn't something that I had to worry about when I wrote it for
+Haskell, so I'm fixing stack overflows and out of memory errors as they
+appear.
+
 ## Developing
 
 Ensure PureScript is installed and available on your path. [Getting

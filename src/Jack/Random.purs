@@ -1,32 +1,35 @@
-module Jack.Random where
+module Jack.Random (
+    Size
+  , Random(..)
+  , runRandom
+
+  , sized
+  , resize
+
+  , chooseInt
+
+  -- ** Unsafe
+  , unsafeDelay
+  , unsafePromote
+  , unsafeChooseInt53
+
+  -- ** Utils
+  , replicateRecM
+  ) where
+
+import Control.Lazy (class Lazy)
+import Control.Monad.Rec.Class (class MonadRec, tailRec, tailRecM)
+
+import Data.Either (Either(..))
+import Data.Int53 (Int53)
+import Data.Int53 as Int53
+import Data.List (List(..))
+import Data.Tuple (Tuple(..), fst)
+
+import Jack.Seed (Seed, splitSeed, nextInt53)
 
 import Prelude
 
-import Control.Alt (class Alt, (<|>))
-import Control.Lazy (class Lazy, defer)
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Random (RANDOM)
-import Control.Monad.Rec.Class (class MonadRec, tailRec, tailRecM)
-import Control.Monad.State (State, runState, evalState)
-import Control.Monad.State.Class (state, modify, get)
-import Control.MonadPlus (class MonadPlus)
-import Control.MonadZero (class MonadZero)
-
-import Data.Array ((!!), length)
-import Data.Array as Array
-import Data.Either (Either(..))
-import Data.Foldable (fold)
-import Data.Int53 (Int53)
-import Data.Int53 as Int53
-import Data.Int as Int
-import Data.List (List(..), toUnfoldable)
-import Data.Maybe (fromMaybe)
-import Data.Monoid.Additive (Additive(..), runAdditive)
-import Data.Tuple (Tuple(..), fst, snd)
-
-import Jack.Seed
-
-import Math as Math
 
 -- | Tests are parameterized by the size of the randomly-generated data,
 -- | the meaning of which depends on the particular generator used.

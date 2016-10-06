@@ -1,9 +1,17 @@
-module Jack.Gen where
+module Jack.Gen (
+    Gen(..)
+  , runGen
+  , mkGen
+  , mkGen_
+  , mapRandom
+  , mapTree
+  , reshrink
+  , reshrinkLazy
+  ) where
 
 import Control.Lazy (class Lazy, defer)
 
 import Data.List.Lazy as Lazy
-import Data.Traversable (traverse)
 
 import Jack.Random (Random, unsafePromote)
 import Jack.Tree (Tree, unfoldTree, expandTree)
@@ -11,6 +19,8 @@ import Jack.Tree (Tree, unfoldTree, expandTree)
 import Prelude
 
 
+-- | A generator for random values of type @a@ that includes all the possible
+-- | shrink scenarios for @a@.
 newtype Gen a =
   Gen (Random (Tree a))
 

@@ -1,4 +1,15 @@
-module Jack.Tree where
+module Jack.Tree (
+    Tree(..)
+  , outcome
+  , shrinks
+  , foldTree
+  , foldForest
+  , unfoldTree
+  , unfoldForest
+  , expandTree
+  , filterTree
+  , filterForest
+  ) where
 
 import Control.Extend (class Extend)
 import Control.Comonad (class Comonad)
@@ -9,7 +20,6 @@ import Data.List.Lazy as Lazy
 import Data.Monoid ((<>))
 import Data.Traversable (class Traversable, traverse, sequence)
 
-import Debug.Trace
 import Prelude
 
 

@@ -1,4 +1,29 @@
-module Jack.Combinators where
+module Jack.Combinators (
+    noShrink
+  , sized
+  , resize
+  , scale
+  , chooseChar
+  , chooseInt
+  , boundedChar
+  , boundedInt
+  , frequency
+  , elements
+  , oneOf
+  , oneOfRec
+  , listOf
+  , listOf1
+  , listOfN
+  , listOfN'
+  , arrayOf
+  , arrayOf1
+  , arrayOfN
+  , arrayOfN'
+  , maybeOf
+  , justOf
+  , suchThat
+  , suchThatMaybe
+  ) where
 
 import Control.Monad.Rec.Class (tailRecM2)
 

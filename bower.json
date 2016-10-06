@@ -30,6 +30,7 @@
     "purescript-tuples": "^1.0.0"
   },
   "devDependencies": {
-    "purescript-psci-support": "^1.0.0"
+    "purescript-psci-support": "^1.0.0",
+    "purescript-debug": "^1.0.0"
   }
 }

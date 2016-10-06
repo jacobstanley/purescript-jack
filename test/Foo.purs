@@ -2,8 +2,12 @@ module Test.Foo where
 
 import Control.Lazy (fix)
 
+import Data.Array as Array
+import Data.Foldable (elem)
 import Data.Generic (class Generic, gShow, gEq)
+import Data.Maybe (Maybe(..))
 import Data.String (toCharArray, fromCharArray, contains)
+import Data.String as String
 
 import Jack.Combinators (boundedInt, chooseInt, elements, oneOfRec, arrayOf)
 import Jack.Gen (Gen, reshrink)
@@ -83,3 +87,25 @@ prop_strings :: Property
 prop_strings =
   forAll genAlphaNumString \xs ->
     property $ not $ contains "x" xs
+
+genEven :: Gen Int
+genEven =
+  map (\x -> (x / 2) * 2 + 1) $
+  boundedInt
+
+genEvenString :: Gen String
+genEvenString =
+  map show genEven
+
+evens :: Array Char
+evens =
+  String.toCharArray "02468"
+
+prop_even_strings_end_with_evens :: Property
+prop_even_strings_end_with_evens =
+  forAll genEvenString \str ->
+    case Array.last $ String.toCharArray str of
+      Nothing ->
+        property false
+      Just x ->
+        property $ elem x evens

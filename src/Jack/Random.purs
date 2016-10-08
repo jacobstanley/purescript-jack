@@ -9,8 +9,6 @@ module Jack.Random (
   , chooseInt
 
   -- ** Unsafe
-  , unsafeDelay
-  , unsafePromote
   , unsafeChooseInt53
 
   -- ** Utils
@@ -44,15 +42,6 @@ newtype Random a =
 runRandom :: forall a. Seed -> Size -> Random a -> a
 runRandom seed size (Random r) =
   r seed size
-
-unsafeDelay :: forall a. Random (Random a -> a)
-unsafeDelay =
-  Random runRandom
-
-unsafePromote :: forall m a. Functor m => m (Random a) -> Random (m a)
-unsafePromote m = do
-  eval <- unsafeDelay
-  pure $ map eval m
 
 -- | Used to construct generators that depend on the size parameter.
 sized :: forall a. (Size -> Random a) -> Random a

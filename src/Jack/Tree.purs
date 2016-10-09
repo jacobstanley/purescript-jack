@@ -17,7 +17,6 @@ import Control.Comonad (class Comonad)
 import Data.Array as Array
 import Data.Foldable (class Foldable, foldr, foldl, foldMap)
 import Data.List.Lazy as Lazy
-import Data.Monoid ((<>))
 import Data.Traversable (class Traversable, traverse, sequence)
 
 import Prelude

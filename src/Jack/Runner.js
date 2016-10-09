@@ -1,8 +1,4 @@
-
-/* global exports */
 "use strict";
-
-// module Jack.Runner
 
 exports.findProperties = function (module) {
   return function () {
@@ -13,7 +9,7 @@ exports.findProperties = function (module) {
       if (name.startsWith("prop_")) {
         var property = exports[name];
 
-        if (typeof property != "object") {
+        if (typeof property !== "object") {
           // not an object, so not a property test
           continue;
         }
@@ -28,7 +24,7 @@ exports.findProperties = function (module) {
     }
 
     return properties;
-  }
+  };
 };
 
 exports.exit = function (code) {

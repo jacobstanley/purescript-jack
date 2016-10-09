@@ -200,6 +200,3 @@ Finally, run `pulp` to build `purescript-jack`:
 
      pulp build
      pulp test
-
-Note: `pulp test` currently has failures which are deliberate to
-exercise shrinking, I'll fix this as soon as I can.

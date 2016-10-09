@@ -60,20 +60,13 @@ genExp =
 prop_example :: Property
 prop_example =
   forAll genExp \x0 ->
-  forAll genExp \x1 ->
-    property $ x0 == x1
-
-prop_foo :: Property
-prop_foo =
-  forAll (chooseInt 0 5) \x ->
-  forAll (chooseInt 0 5) \y ->
-    property true
+    property $ x0 /= Var "never"
 
 prop_salamander :: Property
 prop_salamander =
   forAll (chooseInt 0 5) \x ->
-  forAll (chooseInt 0 5) \y ->
-    property $ x == y
+  forAll (chooseInt 6 10) \y ->
+    property $ x /= y
 
 genAlphaNum :: Gen Char
 genAlphaNum =
@@ -86,11 +79,11 @@ genAlphaNumString =
 prop_strings :: Property
 prop_strings =
   forAll genAlphaNumString \xs ->
-    property $ not $ contains "x" xs
+    property $ not $ contains "#" xs
 
 genEven :: Gen Int
 genEven =
-  map (\x -> (x / 2) * 2 + 1) $
+  map (\x -> (x / 2) * 2) $
   boundedInt
 
 genEvenString :: Gen String

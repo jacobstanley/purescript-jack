@@ -1,0 +1,27 @@
+branches:
+  only:
+    - master
+language: node_js
+dist: trusty
+sudo: required
+node_js: 6
+env:
+  - PSC_VER=v0.9.3
+  - PSC_VER=v0.10.1
+install:
+  - export PATH=$HOME/purescript:$PATH
+  - wget -O $HOME/purescript.tar.gz https://github.com/purescript/purescript/releases/download/$PSC_VER/linux64.tar.gz
+  - tar -xvf $HOME/purescript.tar.gz -C $HOME/
+  - chmod a+x $HOME/purescript
+  - npm install -g bower
+  - npm install
+script:
+  - bower install --production
+  - npm run -s build
+  - bower install
+  - npm -s test
+after_success:
+- >-
+  test $TRAVIS_TAG &&
+  echo $GITHUB_TOKEN | pulp login &&
+  echo y | pulp publish --no-push

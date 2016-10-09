@@ -89,7 +89,7 @@ instance bindGen :: Bind Gen where
                 run seed random =
                   runRandom seed size random
               in
-                bind (run seed1 m) (run seed2 << k)
+                bind (run seed1 m) (run seed2 <<< k)
     in
       Gen $ bindRandom (runGen m0) (runGen <<< k0)
 

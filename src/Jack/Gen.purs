@@ -80,7 +80,7 @@ instance bindGen :: Bind Gen where
   bind m0 k0 =
     let
       bindRandom :: forall a b. Random (Tree a) -> (a -> Random (Tree b)) -> Random (Tree b)
-      bindRandom randomA k =
+      bindRandom m k =
         Random \seed0 size ->
           case splitSeed seed0 of
             Tuple seed1 seed2 ->
@@ -88,20 +88,8 @@ instance bindGen :: Bind Gen where
                 run :: forall x. Seed -> Random x -> x
                 run seed random =
                   runRandom seed size random
-
-                treeA :: Tree a
-                treeA =
-                  run seed1 randomA
-
-                treeRandomsB :: Tree (Random (Tree b))
-                treeRandomsB =
-                  map k treeA
-
-                treesB :: Tree (Tree b)
-                treesB =
-                  map (run seed2) treeRandomsB
               in
-                join treesB
+                bind (run seed1 m) (run seed2 << k)
     in
       Gen $ bindRandom (runGen m0) (runGen <<< k0)
 

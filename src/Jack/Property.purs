@@ -11,6 +11,10 @@ module Jack.Property (
   , check'
   , forAll
   , counterexample
+  , assertEq
+  , assertNotEq
+  , (===)
+  , (=/=)
 
   , sampleTree
   , printSample
@@ -226,3 +230,23 @@ printSampleTree gen = do
   forest <- map (List.take 1) $ sampleTree 10 1 gen
   for_ forest $ \tree -> do
     log $ show tree
+
+assertEq :: forall a. (Eq a, Show a) => a -> a -> Property
+assertEq x y =
+  let
+    render a b = show a <> " /= " <> show b
+  in
+   counterexample "=== Not equal ===" $
+   counterexample (render x y) (property (x == y))
+
+assertNotEq :: forall a. (Eq a, Show a) => a -> a -> Property
+assertNotEq x y =
+  let
+    render a b = show a <> " == " <> show b
+  in
+   counterexample "=== Equal ===" $
+   counterexample (render x y) (property (x /= y))
+
+infix 4 assertEq as ===
+
+infix 4 assertNotEq as =/=

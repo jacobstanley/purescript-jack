@@ -12,7 +12,7 @@ of a PureScript library, in order to help you gamble with your propositions.
 ![](img/dice.jpg)
 
 Jack is a testing library in the spirit of Hughes & Classen's
-[QuickCheck](http://www.cs.tufts.edu/~nr/cs257/archive/john-hughes/quick.pdf).
+[QuickCheck](https://web.archive.org/web/20160319204559/http://www.cs.tufts.edu/~nr/cs257/archive/john-hughes/quick.pdf).
 
 What makes it different is that instead of generating a random value and
 using a shrinking function after the fact, we generate the random value

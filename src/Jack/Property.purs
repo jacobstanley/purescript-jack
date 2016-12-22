@@ -10,6 +10,7 @@ module Jack.Property (
   , check
   , check'
   , forAll
+  , forAllRender
   , counterexample
   , assertEq
   , assertNotEq
@@ -99,10 +100,14 @@ counterexample msg =
   mapGen <<< map <<< mapFailure $ Cons msg
 
 forAll :: forall a. Show a => Gen a -> (a -> Property) -> Property
-forAll gen f =
+forAll =
+  forAllRender show
+
+forAllRender :: forall a. (a -> String) -> Gen a -> (a -> Property) -> Property
+forAllRender render gen f =
   let
     prepend x =
-      unProperty $ counterexample (show x) (f x)
+      unProperty $ counterexample (render x) (f x)
   in
     mkProperty $ bind gen prepend
 

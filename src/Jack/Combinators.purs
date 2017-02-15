@@ -25,11 +25,10 @@ module Jack.Combinators (
   , suchThatMaybe
   ) where
 
-import Control.Monad.Rec.Class (tailRecM2)
+import Control.Monad.Rec.Class (Step(..), tailRecM2)
 
 import Data.Array as Array
 import Data.Char (toCharCode, fromCharCode)
-import Data.Either (Either(..))
 import Data.Foldable (sum)
 import Data.List (List(..))
 import Data.List as List
@@ -315,13 +314,13 @@ tryRandom r p =
     try k n =
       case n of
         0 ->
-          pure $ Right Nothing
+          pure $ Done Nothing
         _ ->
           Random.resize (2 * k + n) r >>= \x ->
             if p (outcome x) then
-              pure <<< Right <<< Just $ filterTree p x
+              pure <<< Done <<< Just $ filterTree p x
             else
-              pure $ Left { a: k + 1, b: n - 1 }
+              pure $ Loop { a: k + 1, b: n - 1 }
   in
     Random.sized $ tailRecM2 try 0 <<< max 1
 

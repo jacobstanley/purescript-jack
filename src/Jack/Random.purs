@@ -16,9 +16,8 @@ module Jack.Random (
   ) where
 
 import Control.Lazy (class Lazy)
-import Control.Monad.Rec.Class (class MonadRec, tailRec, tailRecM)
+import Control.Monad.Rec.Class (class MonadRec, Step(..), tailRec, tailRecM)
 
-import Data.Either (Either(..))
 import Data.Int53 (Int53)
 import Data.Int53 as Int53
 import Data.List (List(..))
@@ -74,9 +73,9 @@ replicateRecM k m =
   let
     go { acc, n } =
       if n <= 0 then
-        pure $ Right acc
+        pure $ Done acc
       else
-        map (\x -> Left { acc: Cons x acc, n: n - 1 }) m
+        map (\x -> Loop { acc: Cons x acc, n: n - 1 }) m
   in
     tailRecM go { acc: Nil, n: k }
 
@@ -114,10 +113,10 @@ instance monadRecRandom :: MonadRec Random where
         case splitSeed seed of
           Tuple seed1 seed2 ->
             case runRandom seed1 size $ k a of
-              Left a1 ->
-                Left { seed: seed2, size, a: a1 }
-              Right b ->
-                Right b
+              Loop a1 ->
+                Loop { seed: seed2, size, a: a1 }
+              Done b ->
+                Done b
     in
       Random $ \seed size ->
         tailRec go { seed, size, a: a0 }

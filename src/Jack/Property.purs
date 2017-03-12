@@ -25,15 +25,15 @@ module Jack.Property (
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Console (CONSOLE, log)
 import Control.Monad.Eff.Random (RANDOM)
-import Control.Monad.Rec.Class (tailRec)
+import Control.Monad.Rec.Class (Step(..), tailRec)
 
-import Data.Either (Either(..))
 import Data.Foldable (for_, foldMap, intercalate)
 import Data.List (List(..))
 import Data.List as List
 import Data.List.Lazy as Lazy
 import Data.Maybe (Maybe(..))
-import Data.Maybe.First (First(..), runFirst)
+import Data.Maybe.First (First(..))
+import Data.Newtype (unwrap)
 import Data.Traversable (traverse_)
 import Data.Tuple (Tuple(..))
 
@@ -129,7 +129,7 @@ check' n p = do
 
     loop { seed, size, tests } =
       if tests == n then
-        Right {
+        Done {
             tests
           , result: pure Success
           }
@@ -142,13 +142,13 @@ check' n p = do
             in
               case outcome result of
                 Failure _ ->
-                  Right {
+                  Done {
                       tests: tests + 1
                     , result
                     }
 
                 Success ->
-                  Left {
+                  Loop {
                       seed: seed2
                     , size: nextSize size
                     , tests: tests + 1
@@ -210,7 +210,7 @@ takeFailure t@(Node x _) =
 
 firstFailure :: Lazy.List (Tree Result) -> Maybe (Tree Result)
 firstFailure =
-  runFirst <<< foldMap (First <<< takeFailure)
+  unwrap <<< foldMap (First <<< takeFailure)
 
 -- | Generate some example trees.
 sampleTree :: forall e a. Size -> Int -> Gen a -> Eff ("random" :: RANDOM | e) (List (Tree a))

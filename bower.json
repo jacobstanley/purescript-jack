@@ -19,29 +19,16 @@
     "bower.json"
   ],
   "dependencies": {
-    "purescript-arrays": "^3.0.0",
-    "purescript-console": "^2.0.0",
-    "purescript-control": "^2.0.0",
-    "purescript-eff": "^2.0.0",
-    "purescript-foldable-traversable": "^2.0.0",
-    "purescript-generics": "^3.0.0",
-    "purescript-int-53": "^2.1.0",
-    "purescript-integers": "^2.0.0",
-    "purescript-lazy": "^2.0.0",
-    "purescript-lists": "^3.0.0",
-    "purescript-maps": "^2.0.0",
-    "purescript-maybe": "^2.0.0",
-    "purescript-monoid": "^2.0.0",
-    "purescript-nonempty": "^3.0.0",
-    "purescript-partial": "^1.1.0",
-    "purescript-prelude": "^2.0.0",
-    "purescript-random": "^2.0.0",
-    "purescript-strings": "^2.0.0",
-    "purescript-tailrec": "^2.0.0",
-    "purescript-tuples": "^3.0.0",
-    "purescript-newtype": "^1.0.0"
+    "purescript-prelude": "^3.0.0",
+    "purescript-foldable-traversable": "^3.0.0",
+    "purescript-int-53": "^3.0.0",
+    "purescript-lists": "^4.0.1",
+    "purescript-arrays": "^4.0.1",
+    "purescript-maps": "^3.0.0",
+    "purescript-console": "^3.0.0",
+    "purescript-random": "^3.0.0"
   },
   "devDependencies": {
-    "purescript-psci-support": "^2.0.0"
+    "purescript-psci-support": "^3.0.0"
   }
 }

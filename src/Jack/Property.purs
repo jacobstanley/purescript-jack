@@ -236,7 +236,7 @@ printSampleTree gen = do
   for_ forest $ \tree -> do
     log $ show tree
 
-assertEq :: forall a. (Eq a, Show a) => a -> a -> Property
+assertEq :: forall a. Eq a => Show a => a -> a -> Property
 assertEq x y =
   let
     render a b = show a <> " /= " <> show b
@@ -244,7 +244,7 @@ assertEq x y =
    counterexample "=== Not equal ===" $
    counterexample (render x y) (property (x == y))
 
-assertNotEq :: forall a. (Eq a, Show a) => a -> a -> Property
+assertNotEq :: forall a. Eq a => Show a => a -> a -> Property
 assertNotEq x y =
   let
     render a b = show a <> " == " <> show b

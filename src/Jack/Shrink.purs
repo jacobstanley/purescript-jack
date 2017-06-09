@@ -9,7 +9,7 @@ import Jack.Tree (Tree(..), outcome, shrinks)
 import Prelude
 
 -- | Shrink an integral by edging towards a destination number.
-shrinkTowards :: forall a. (Ord a, EuclideanRing a) => a -> a -> Lazy.List a
+shrinkTowards :: forall a. Ord a => EuclideanRing a => a -> a -> Lazy.List a
 shrinkTowards destination x =
   if destination == x then
     Lazy.nil
@@ -90,7 +90,7 @@ shrinkList xs = do
 -- | > halves 128 == [128,64,32,16,8,4,2,1]
 -- | > halves (-10) == [-10,-5,-2,-1]
 -- |
-halves :: forall a. (Ord a, EuclideanRing a) => a -> Lazy.List a
+halves :: forall a. Ord a => EuclideanRing a => a -> Lazy.List a
 halves =
   let
     two =

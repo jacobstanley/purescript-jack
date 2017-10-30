@@ -1,29 +1,33 @@
 "use strict";
 
 exports.findProperties = function (module) {
-  return function () {
-    var properties = {};
-    var exports = require(module);
+  return function (tuple) {
+    return function () {
+      var properties = {};
+      var badPropertyNames = [];
+      var exports = require(module);
 
-    for (var name in exports) {
-      if (name.startsWith("prop_")) {
-        var property = exports[name];
+      for (var name in exports) {
+        if (name.startsWith("prop_")) {
+          var property = exports[name];
 
-        if (typeof property !== "object") {
-          // not an object, so not a property test
-          continue;
+          if (typeof property !== "object") {
+            // not an object, so not a property test
+            badPropertyNames.push(name);
+            continue;
+          }
+
+          if (!property.hasOwnProperty("Property :: Gen Result")) {
+            // 'Property :: Gen Result' field was missing, so not a property test
+            continue;
+          }
+
+          properties[name] = property;
         }
-
-        if (!property.hasOwnProperty("Property :: Gen Result")) {
-          // 'Property :: Gen Result' field was missing, so not a property test
-          continue;
-        }
-
-        properties[name] = property;
       }
-    }
 
-    return properties;
+      return tuple(badPropertyNames)(properties);
+    };
   };
 };
 

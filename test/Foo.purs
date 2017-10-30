@@ -102,3 +102,7 @@ prop_even_strings_end_with_evens =
         property false
       Just x ->
         property $ elem x evens
+
+prop_bad :: Int -> Property
+prop_bad n =
+  property $ elem n [1,2,3]

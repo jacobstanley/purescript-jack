@@ -6,10 +6,11 @@
     "test": "pulp test"
   },
   "devDependencies": {
-    "jscs": "^2.8.0",
-    "jshint": "^2.9.1",
-    "pulp": "^11.0.0",
-    "purescript": "^0.11.3",
+    "bower": "^1.8.2",
+    "jscs": "^2.11.0",
+    "jshint": "^2.9.5",
+    "pulp": "^11.0.2",
+    "purescript": "^0.11.6",
     "purescript-psa": "^0.5.1",
     "rimraf": "^2.5.0"
   }

@@ -4,7 +4,7 @@ branches:
 language: node_js
 dist: trusty
 sudo: required
-node_js: 6
+node_js: 8
 env:
   - PSC_VER=v0.11.3
 install:

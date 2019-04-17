@@ -27,10 +27,10 @@
     "purescript-foreign-object": "^2.0.1",
     "purescript-console": "^4.2.0",
     "purescript-random": "^4.0.0",
-    "purescript-strings": "^4.0.1",
-    "purescript-generics-rep": "^6.1.1"
+    "purescript-strings": "^4.0.1"
   },
   "devDependencies": {
+    "purescript-generics-rep": "^6.1.1",
     "purescript-psci-support": "^4.0.0"
   }
 }

@@ -33,7 +33,7 @@ runGen (Gen gen) =
 -- | Create a 'Gen' from a shrink function and a 'Random'.
 mkGen :: forall a. (a -> Lazy.List a) -> Random a -> Gen a
 mkGen shr =
-  Gen <<< map (unfoldTree id shr)
+  Gen <<< map (unfoldTree identity shr)
 
 -- | Create a non-shrinking 'Gen' from a 'Random'.
 mkGen_ :: forall a. Random a -> Gen a

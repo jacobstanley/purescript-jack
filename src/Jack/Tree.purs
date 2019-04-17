@@ -144,7 +144,7 @@ expandTree f (Node x xs) =
   --
   -- We'd need some kind of tree transpose to do this properly.
   --
-  Node x (map (expandTree f) xs <> unfoldForest id f x)
+  Node x (map (expandTree f) xs <> unfoldForest identity f x)
 
 -- | Recursively discard any shrinks whose outcome does not pass the predicate.
 -- | /Note that the root outcome can never be discarded./

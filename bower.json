@@ -19,16 +19,18 @@
     "bower.json"
   ],
   "dependencies": {
-    "purescript-prelude": "^3.0.0",
-    "purescript-foldable-traversable": "^3.0.0",
-    "purescript-int-53": "^3.0.0",
-    "purescript-lists": "^4.0.1",
-    "purescript-arrays": "^4.0.1",
-    "purescript-maps": "^3.0.0",
-    "purescript-console": "^3.0.0",
-    "purescript-random": "^3.0.0"
+    "purescript-prelude": "^4.1.0",
+    "purescript-foldable-traversable": "^4.1.1",
+    "purescript-int-53": "^4.0.0",
+    "purescript-lists": "^5.4.0",
+    "purescript-arrays": "^5.2.1",
+    "purescript-foreign-object": "^2.0.1",
+    "purescript-console": "^4.2.0",
+    "purescript-random": "^4.0.0",
+    "purescript-strings": "^4.0.1",
+    "purescript-generics-rep": "^6.1.1"
   },
   "devDependencies": {
-    "purescript-psci-support": "^3.0.0"
+    "purescript-psci-support": "^4.0.0"
   }
 }

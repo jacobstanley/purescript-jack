@@ -4,10 +4,11 @@ import Control.Lazy (fix)
 
 import Data.Array as Array
 import Data.Foldable (elem)
-import Data.Generic (class Generic, gShow, gEq)
+import Data.Generic.Rep (class Generic)
+import Data.Generic.Rep.Show (genericShow)
 import Data.Maybe (Maybe(..))
-import Data.String (Pattern(..), toCharArray, fromCharArray, contains)
-import Data.String as String
+import Data.String (Pattern(..), contains)
+import Data.String.CodeUnits (fromCharArray, toCharArray)
 
 import Jack.Combinators (boundedInt, chooseInt, elements, oneOfRec, arrayOf)
 import Jack.Gen (Gen, reshrink)
@@ -21,15 +22,13 @@ data Exp =
   | Lam String Exp
   | App Exp Exp
 
-derive instance genericExp :: Generic Exp
+derive instance genericExp :: Generic Exp _
 
-instance eqExp :: Eq Exp where
-  eq =
-    gEq
+derive instance eqExp :: Eq Exp
 
 instance showExp :: Show Exp where
-  show =
-    gShow
+  show x =
+    genericShow x
 
 genName :: Gen String
 genName =
@@ -92,12 +91,12 @@ genEvenString =
 
 evens :: Array Char
 evens =
-  String.toCharArray "02468"
+  toCharArray "02468"
 
 prop_even_strings_end_with_evens :: Property
 prop_even_strings_end_with_evens =
   forAll genEvenString \str ->
-    case Array.last $ String.toCharArray str of
+    case Array.last $ toCharArray str of
       Nothing ->
         property false
       Just x ->

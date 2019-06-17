@@ -75,8 +75,16 @@ scale f j =
 -- | Generates a 'Char' in the given range.
 chooseChar :: Char -> Char -> Gen Char
 chooseChar x0 x1 =
-  map fromCharCode $
-    chooseInt (toCharCode x0) (toCharCode x1)
+  let
+    fromInt x =
+      case fromCharCode x of
+        Nothing ->
+          x0
+        Just x2 ->
+          x2
+  in
+    map fromInt $
+      chooseInt (toCharCode x0) (toCharCode x1)
 
 -- | Generates an integral number.
 chooseInt :: Int -> Int -> Gen Int

@@ -22,9 +22,6 @@ module Jack.Property (
   , printSampleTree
   ) where
 
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Console (CONSOLE, log)
-import Control.Monad.Eff.Random (RANDOM)
 import Control.Monad.Rec.Class (Step(..), tailRec)
 
 import Data.Foldable (for_, foldMap, intercalate)
@@ -36,6 +33,9 @@ import Data.Maybe.First (First(..))
 import Data.Newtype (unwrap)
 import Data.Traversable (traverse_)
 import Data.Tuple (Tuple(..))
+
+import Effect (Effect)
+import Effect.Console (log)
 
 import Jack.Gen (Gen(..), runGen)
 import Jack.Random (Size, runRandom, replicateRecM)
@@ -111,11 +111,11 @@ forAllRender render gen f =
   in
     mkProperty $ bind gen prepend
 
-check :: forall e. Property -> Eff ("random" :: RANDOM, "console" :: CONSOLE | e) Boolean
+check :: Property -> Effect Boolean
 check =
   check' 100
 
-check' :: forall e. Int -> Property -> Eff ("random" :: RANDOM, "console" :: CONSOLE | e) Boolean
+check' :: Int -> Property -> Effect Boolean
 check' n p = do
   let
     random =
@@ -213,14 +213,14 @@ firstFailure =
   unwrap <<< foldMap (First <<< takeFailure)
 
 -- | Generate some example trees.
-sampleTree :: forall e a. Size -> Int -> Gen a -> Eff ("random" :: RANDOM | e) (List (Tree a))
+sampleTree :: forall a. Size -> Int -> Gen a -> Effect (List (Tree a))
 sampleTree size count (Gen r) = do
   seed <- randomSeed
   pure <<< runRandom seed size $
     replicateRecM count r
 
 -- | Generate some example outcomes (and shrinks) and prints them to 'stdout'.
-printSample :: forall e a. Show a => Gen a -> Eff ("random" :: RANDOM, "console" :: CONSOLE | e) Unit
+printSample :: forall a. Show a => Gen a -> Effect Unit
 printSample gen = do
   forest <- map (List.take 5) $ sampleTree 10 5 gen
   for_ forest $ \tree -> do
@@ -230,7 +230,7 @@ printSample gen = do
     traverse_ (log <<< show <<< outcome) $ shrinks tree
     log ""
 
-printSampleTree :: forall e a. Show a => Gen a -> Eff ("random" :: RANDOM, "console" :: CONSOLE | e) Unit
+printSampleTree :: forall a. Show a => Gen a -> Effect Unit
 printSampleTree gen = do
   forest <- map (List.take 1) $ sampleTree 10 1 gen
   for_ forest $ \tree -> do

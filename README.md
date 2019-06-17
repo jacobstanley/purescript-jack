@@ -60,15 +60,13 @@ module Test.Main (
     main
   ) where
 
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Console (CONSOLE)
-import Control.Monad.Eff.Random (RANDOM)
+import Effect (Effect)
 
 import Jack.Runner (jackMain)
 
 import Prelude
 
-main :: forall e. Eff ("random" :: RANDOM, "console" :: CONSOLE | e) Unit
+main :: Effect Unit
 main =
   jackMain [
     -- List all the modules which contain property tests here, for this
@@ -89,7 +87,7 @@ module Test.DiceGames where
 import Data.Array as Array
 import Data.Foldable (elem)
 import Data.Maybe (Maybe(..))
-import Data.String as String
+import Data.String.CodeUnits (toCharArray)
 
 import Jack (Property, Gen, property, forAll, boundedInt)
 
@@ -105,12 +103,12 @@ genEvenString =
 
 evens :: Array Char
 evens =
-  String.toCharArray "02468"
+  toCharArray "02468"
 
 prop_even_strings_end_with_evens :: Property
 prop_even_strings_end_with_evens =
   forAll genEvenString \str ->
-    case Array.last $ String.toCharArray str of
+    case Array.last $ toCharArray str of
       Nothing ->
         property false -- numbers should always have at least one digit
       Just x ->

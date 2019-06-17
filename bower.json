@@ -1,14 +1,14 @@
 {
   "name": "purescript-jack",
   "description": "QuickCheck with shrinking for free",
-  "homepage": "https://github.com/jystic/purescript-jack",
+  "homepage": "https://github.com/jacobstanley/purescript-jack",
   "license": "Apache-2.0",
   "authors": [
     "Jacob Stanley <jacob@stanley.io>"
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/jystic/purescript-jack.git"
+    "url": "git://github.com/jacobstanley/purescript-jack.git"
   },
   "ignore": [
     "**/.*",

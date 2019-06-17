@@ -1,6 +1,9 @@
-[![Latest Release](http://img.shields.io/bower/v/purescript-jack.svg)](https://github.com/jystic/purescript-jack/releases)
-[![Build Status](https://travis-ci.org/jystic/purescript-jack.svg?branch=master)](https://travis-ci.org/jystic/purescript-jack)
+[![Latest Release](http://img.shields.io/bower/v/purescript-jack.svg)](https://github.com/jacobstanley/purescript-jack/releases)
+[![Build Status](https://travis-ci.org/jacobstanley/purescript-jack.svg?branch=master)](https://travis-ci.org/jacobstanley/purescript-jack)
+<!--
+Not working for some reason?
 [![Dependency Status](https://www.versioneye.com/user/projects/57f641d59907da004fa9a7e8/badge.svg?style=flat)](https://www.versioneye.com/user/projects/57f641d59907da004fa9a7e8)
+-->
 
 # purescript-jack
 

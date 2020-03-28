@@ -4,3 +4,7 @@
 /output/
 /.psci*
 /src/.webpack.js
+/.spago/*
+/.psc*
+/.purs*
+/generated-docs/*

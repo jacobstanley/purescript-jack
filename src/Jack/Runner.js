@@ -3,7 +3,9 @@
 exports.findProperties = function (module) {
   return function () {
     var properties = {};
-    var exports = require(module);
+    // Using `require(module);` won't find the correct module
+    // By appending `../` to its front, it'll find the correct module.
+    var exports = require("../" + module);
 
     for (var name in exports) {
       if (name.startsWith("prop_")) {

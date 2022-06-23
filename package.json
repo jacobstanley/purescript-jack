@@ -1,16 +1,17 @@
 {
   "private": true,
   "scripts": {
-    "clean": "rimraf output && rimraf .pulp-cache",
-    "build": "jshint src && jscs src && pulp build",
-    "test": "pulp test"
+    "postinstall": "../../../scripts/install-purescript",
+    "test": "npm run ptest",
+    "pbuild": "spago build",
+    "ptest": "spago test",
+    "format": "../scripts/format"
   },
+  "dependencies": {},
   "devDependencies": {
-    "jscs": "^2.8.0",
-    "jshint": "^2.9.1",
-    "pulp": "^11.0.0",
-    "purescript": "^0.11.3",
-    "purescript-psa": "^0.5.1",
-    "rimraf": "^2.5.0"
+    "spago": "^0.20.3",
+    "eslint": "^8.16.0",
+    "prettier": "^2.6.0",
+    "purs-tidy": "^0.7.2"
   }
 }

@@ -1,5 +1,5 @@
-module Jack.Gen (
-    Gen(..)
+module Jack.Gen
+  ( Gen(..)
   , runGen
   , mkGen
   , mkGen_
@@ -20,7 +20,6 @@ import Jack.Tree (Tree, unfoldTree, expandTree)
 
 import Prelude
 
-
 -- | A generator for random values of type @a@ that includes all the possible
 -- | shrink scenarios for @a@.
 newtype Gen a =
@@ -33,7 +32,7 @@ runGen (Gen gen) =
 -- | Create a 'Gen' from a shrink function and a 'Random'.
 mkGen :: forall a. (a -> Lazy.List a) -> Random a -> Gen a
 mkGen shr =
-  Gen <<< map (unfoldTree id shr)
+  Gen <<< map (unfoldTree identity shr)
 
 -- | Create a non-shrinking 'Gen' from a 'Random'.
 mkGen_ :: forall a. Random a -> Gen a
@@ -69,8 +68,8 @@ instance functorGen :: Functor Gen where
 
 instance applyGen :: Apply Gen where
   apply f x =
-     Gen $
-       (<*>) <$> runGen f <*> runGen x
+    Gen $
+      (<*>) <$> runGen f <*> runGen x
 
 instance applicativeGen :: Applicative Gen where
   pure =

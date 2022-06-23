@@ -1,6 +1,6 @@
 "use strict";
 
-exports.findProperties = function (module) {
+export function findProperties(module) {
   return function () {
     var properties = {};
     var exports = require(module);
@@ -25,10 +25,10 @@ exports.findProperties = function (module) {
 
     return properties;
   };
-};
+}
 
-exports.exit = function (code) {
+export function exit(code) {
   return function () {
     process.exit(code);
   };
-};
+}

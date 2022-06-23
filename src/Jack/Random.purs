@@ -1,5 +1,5 @@
-module Jack.Random (
-    Size
+module Jack.Random
+  ( Size
   , Random(..)
   , runRandom
 
@@ -26,7 +26,6 @@ import Data.Tuple (Tuple(..), fst)
 import Jack.Seed (Seed, splitSeed, nextInt53)
 
 import Prelude
-
 
 -- | Tests are parameterized by the size of the randomly-generated data,
 -- | the meaning of which depends on the particular generator used.
@@ -65,7 +64,7 @@ unsafeChooseInt53 lo hi =
 chooseInt :: Int -> Int -> Random Int
 chooseInt lo hi =
   map Int53.toInt $
-  unsafeChooseInt53 (Int53.fromInt lo) (Int53.fromInt hi)
+    unsafeChooseInt53 (Int53.fromInt lo) (Int53.fromInt hi)
 
 -- | Tail recursive replicate.
 replicateRecM :: forall m a. MonadRec m => Int -> m a -> m (List a)
@@ -102,7 +101,7 @@ instance bindRandom :: Bind Random where
       case splitSeed seed of
         Tuple seed1 seed2 ->
           runRandom seed2 size <<< k $
-          runRandom seed1 size r
+            runRandom seed1 size r
 
 instance monadRandom :: Monad Random
 

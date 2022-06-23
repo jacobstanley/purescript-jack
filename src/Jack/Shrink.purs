@@ -52,11 +52,11 @@ sequenceShrinkList =
 
 -- | Turn a list of trees in to a tree of lists, using the supplied function to
 -- | merge shrinking options.
-sequenceShrink ::
-  forall a.
-  (List (Tree a) -> Lazy.List (List (Tree a))) ->
-  List (Tree a) ->
-  Tree (List a)
+sequenceShrink
+  :: forall a
+   . (List (Tree a) -> Lazy.List (List (Tree a)))
+  -> List (Tree a)
+  -> Tree (List a)
 sequenceShrink merge xs =
   Node
     (map outcome xs)
@@ -71,17 +71,21 @@ shrinkOne shr xs00 =
       Lazy.nil
     Cons x0 xs0 ->
       -- TODO refactor, was list comprehension
-      (do x1 <- shr x0
-          pure $ Cons x1 xs0) <>
-      (do xs1 <- shrinkOne shr xs0
-          pure $ Cons x0 xs1)
+      ( do
+          x1 <- shr x0
+          pure $ Cons x1 xs0
+      ) <>
+        ( do
+            xs1 <- shrinkOne shr xs0
+            pure $ Cons x0 xs1
+        )
 
 -- | Produce a smaller permutation of the input list.
 shrinkList :: forall a. List a -> Lazy.List (List a)
 shrinkList xs = do
- Lazy.concatMap
-   (\k -> removes k xs)
-   (halves $ List.length xs)
+  Lazy.concatMap
+    (\k -> removes k xs)
+    (halves $ List.length xs)
 
 -- | Produces a list containing the results of halving a number over and over
 -- | again.
@@ -97,7 +101,7 @@ halves =
       one + one
   in
     Lazy.takeWhile (\x -> x /= zero) <<<
-    Lazy.iterate (\x -> x `div` two)
+      Lazy.iterate (\x -> x `div` two)
 
 -- | Permutes a list by removing 'k' consecutive elements from it:
 -- |

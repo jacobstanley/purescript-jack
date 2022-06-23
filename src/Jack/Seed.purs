@@ -8,8 +8,8 @@
 --    Efficient and portable combined random number generators
 --    Comm ACM, 31(6), Jun 1988, pp742-749.
 --
-module Jack.Seed (
-    Seed
+module Jack.Seed
+  ( Seed
   , mkSeed
   , randomSeed
   , nextMin
@@ -19,13 +19,13 @@ module Jack.Seed (
   , splitSeed
   ) where
 
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Random (RANDOM, randomInt)
-
 import Data.Int.Bits ((.&.))
 import Data.Int53 (Int53)
 import Data.Int53 as Int53
 import Data.Tuple (Tuple(..))
+
+import Effect (Effect)
+import Effect.Random (randomInt)
 
 import Prelude
 
@@ -56,7 +56,7 @@ mkSeed s0 =
     Seed (s1 + 1) (s2 + 1)
 
 -- | Create a random 'Seed' using the system random number generator.
-randomSeed :: forall e. Eff ("random" :: RANDOM | e) Seed
+randomSeed :: Effect Seed
 randomSeed =
   mkSeed <$> randomInt bottom top
 

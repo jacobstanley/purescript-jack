@@ -1,5 +1,5 @@
-module Jack.Combinators (
-    noShrink
+module Jack.Combinators
+  ( noShrink
   , sized
   , resize
   , scale
@@ -25,8 +25,9 @@ module Jack.Combinators (
   , suchThatMaybe
   ) where
 
-import Control.Monad.Rec.Class (Step(..), tailRecM2)
+import Prelude
 
+import Control.Monad.Rec.Class (Step(..), tailRecM2)
 import Data.Array as Array
 import Data.Char (toCharCode, fromCharCode)
 import Data.Foldable (sum)
@@ -36,17 +37,13 @@ import Data.List.Lazy as Lazy
 import Data.Maybe (Maybe(..), isJust)
 import Data.NonEmpty (NonEmpty(..))
 import Data.Tuple (Tuple(..), fst)
-
 import Jack.Gen (Gen(..), runGen, mkGen, mapTree, mapRandom)
 import Jack.Random (Random, replicateRecM)
 import Jack.Random as Random
 import Jack.Shrink (shrinkTowards, sequenceShrinkList, sequenceShrinkOne)
 import Jack.Tree (Tree(..), outcome, filterTree)
-
+import Partial.Unsafe (unsafeCrashWith)
 import Partial.Unsafe as Savage
-
-import Prelude
-
 
 -- | Prevent a 'Gen' from shrinking.
 noShrink :: forall a. Gen a -> Gen a
@@ -75,8 +72,14 @@ scale f j =
 -- | Generates a 'Char' in the given range.
 chooseChar :: Char -> Char -> Gen Char
 chooseChar x0 x1 =
-  map fromCharCode $
-    chooseInt (toCharCode x0) (toCharCode x1)
+  chooseInt (toCharCode x0) (toCharCode x1) <#> \n ->
+    case fromCharCode n of
+      Nothing -> unsafeCrashWith $ "Generating char between " <> show x0
+        <> " and "
+        <> show x1
+        <> " generated invalid char code: "
+        <> show n
+      Just x -> x
 
 -- | Generates an integral number.
 chooseInt :: Int -> Int -> Gen Int
@@ -201,14 +204,15 @@ listOf1 jack =
             Nil ->
               Savage.unsafeCrashWith $
                 "Jack.Combinators.listOf1: " <>
-                "internal error, generated empty list"
+                  "internal error, generated empty list"
             Cons y ys ->
               NonEmpty y ys
 
         go =
-          map unpack <<<
-          filterTree (not <<< List.null) <<<
-          sequenceShrinkList
+          map unpack
+            <<< filterTree (not <<< List.null)
+            <<<
+              sequenceShrinkList
 
       map go <<< Random.replicateRecM k $ runGen jack
 
@@ -259,8 +263,8 @@ arrayOfN' n m =
 maybeOf :: forall a. Gen a -> Gen (Maybe a)
 maybeOf jack =
   sized $ \n ->
-    frequency [
-        Tuple 2 $
+    frequency
+      [ Tuple 2 $
           pure Nothing
       , Tuple (1 + n) $
           Just <$> jack
@@ -276,7 +280,7 @@ justOf g = do
     Nothing ->
       Savage.unsafeCrashWith $
         "Jack.Combinators.justOf: " <>
-        "internal error, unexpected Nothing"
+          "internal error, unexpected Nothing"
 
 -- | Generates a value that satisfies a predicate.
 suchThat :: forall a. Gen a -> (a -> Boolean) -> Gen a

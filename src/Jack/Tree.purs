@@ -1,5 +1,5 @@
-module Jack.Tree (
-    Tree(..)
+module Jack.Tree
+  ( Tree(..)
   , outcome
   , shrinks
   , foldTree
@@ -20,7 +20,6 @@ import Data.List.Lazy as Lazy
 import Data.Traversable (class Traversable, traverse, sequence)
 
 import Prelude
-
 
 -- | A rose tree which represents a random generated outcome, and all the ways
 -- | in which it can be made smaller.
@@ -76,11 +75,11 @@ instance applicativeTree :: Applicative Tree where
 instance applyTree :: Apply Tree where
   apply (Node f fs) x@(Node y ys) =
     Node (f y) $
-    -- Data.Tree would have:
-    --   map (map f) ys <>
-    --   map (flip apply x) fs
+      -- Data.Tree would have:
+      --   map (map f) ys <>
+      --   map (flip apply x) fs
       map (flip apply x) fs <>
-      map (map f) ys
+        map (map f) ys
 
 instance bindTree :: Bind Tree where
   bind (Node x xs) k =
@@ -144,7 +143,7 @@ expandTree f (Node x xs) =
   --
   -- We'd need some kind of tree transpose to do this properly.
   --
-  Node x (map (expandTree f) xs <> unfoldForest id f x)
+  Node x (map (expandTree f) xs <> unfoldForest identity f x)
 
 -- | Recursively discard any shrinks whose outcome does not pass the predicate.
 -- | /Note that the root outcome can never be discarded./
